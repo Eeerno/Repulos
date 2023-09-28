@@ -3,17 +3,16 @@ using UnityEngine;
 public class Locations : MonoBehaviour
 {
     [SerializeField] GameObject[] locations;
-    public GameObject currentTarget = null;
+    [SerializeField] MapScript map;
+    [SerializeField] PhotoCamera photoCamera;
+    [SerializeField] int minPhotosNeeded = 2;
+    [SerializeField] int maxPhotosNeeded = 5;
+    GameObject currentTarget = null;
     int currentIndex = 0;
 
     private void Start()
     {
         assignNewTarget();
-    }
-
-    void Update()
-    {
-        
     }
 
     public void assignNewTarget()
@@ -24,25 +23,18 @@ public class Locations : MonoBehaviour
         }
 
         int randomIndex = currentIndex;
-        while ( currentIndex == randomIndex ) {                     // Try not to get the same as last time 
+        do {                                                   
             randomIndex = Random.Range(0, locations.Length);
-        }
+        } while (currentIndex == randomIndex);                   // Try not to get the same as last time 
         currentIndex = randomIndex;
+        
         GameObject newTarget = locations[currentIndex];
         newTarget.SetActive(true);
         currentTarget = newTarget;
-        Debug.Log("Your next target is: " + locations[currentIndex].name);
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (currentTarget != null)
-        {
-            Gizmos.color = Color.red;
-            Vector3 gizmoPos = new( currentTarget.transform.position.x,
-                                    currentTarget.transform.position.y + 10,
-                                    currentTarget.transform.position.z );
-            Gizmos.DrawSphere(gizmoPos, 5);
-        }
+        map.assignNewTarget(newTarget);
+        Debug.Log("A következõ célpont: " + locations[currentIndex].name);
+        int random = Random.Range(minPhotosNeeded, maxPhotosNeeded + 1);
+        photoCamera.addNewPhotoJob(random);
+        Debug.Log($"{photoCamera.PhotosNeeded} képet szeretnék róla!" );
     }
 }

@@ -4,11 +4,11 @@ using static UnityEditor.PlayerSettings;
 class CameraLookAt : MonoBehaviour
 {
     [SerializeField] float angularSpeedTowards;
-    [SerializeField] float angularSpeedBack;
+    [SerializeField] float angularSpeedReset;
     [SerializeField] Transform cameraPivot;
     Quaternion defaultRotation;
     Vector3 targetPosition;
-    bool needToLook;
+    public bool needToLook;
 
     void Start()
     {
@@ -25,11 +25,11 @@ class CameraLookAt : MonoBehaviour
         }
         else
         {
-            cameraPivot.localRotation = Quaternion.RotateTowards(cameraPivot.localRotation, defaultRotation, angularSpeedBack * Time.deltaTime);
+            cameraPivot.localRotation = Quaternion.RotateTowards(cameraPivot.localRotation, defaultRotation, angularSpeedReset * Time.deltaTime);
         }
     }
 
-    public void addNewTarget(Vector3 tPos)
+    public void addNewCamTarget(Vector3 tPos)
     {
         targetPosition = tPos;
         needToLook = true;
